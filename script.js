@@ -167,37 +167,62 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sliderTrack && sliderDots.length > 0) {
         let sliderIndex = 0;
         const slides = document.querySelectorAll('.slider-slide');
+        let isTransitioning = false;
         
         const showSlide = (index) => {
-            sliderTrack.style.transform = `translateX(-${index * 100}%)`;
+            if (isTransitioning) return;
             
+            isTransitioning = true;
+            
+            // First update the active dot
             sliderDots.forEach(dot => {
                 dot.classList.remove('active');
             });
             
             sliderDots[index].classList.add('active');
-            sliderIndex = index;
+            
+            // Then animate the slide with a slight delay
+            setTimeout(() => {
+                sliderTrack.style.transition = 'transform 0.5s ease-in-out';
+                sliderTrack.style.transform = `translateX(-${index * 100}%)`;
+                
+                sliderIndex = index;
+                
+                // Reset the transitioning flag after animation completes
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 500);
+            }, 50);
         };
         
         sliderDots.forEach((dot, index) => {
             dot.addEventListener('click', () => {
-                showSlide(index);
+                if (!isTransitioning) {
+                    showSlide(index);
+                }
             });
         });
         
         if (sliderPrev) {
             sliderPrev.addEventListener('click', () => {
-                sliderIndex = (sliderIndex - 1 + slides.length) % slides.length;
-                showSlide(sliderIndex);
+                if (!isTransitioning) {
+                    const newIndex = (sliderIndex - 1 + slides.length) % slides.length;
+                    showSlide(newIndex);
+                }
             });
         }
         
         if (sliderNext) {
             sliderNext.addEventListener('click', () => {
-                sliderIndex = (sliderIndex + 1) % slides.length;
-                showSlide(sliderIndex);
+                if (!isTransitioning) {
+                    const newIndex = (sliderIndex + 1) % slides.length;
+                    showSlide(newIndex);
+                }
             });
         }
+        
+        // Initialize the first slide
+        showSlide(0);
     }
 
     // FAQ Accordion

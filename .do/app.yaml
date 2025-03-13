@@ -1,0 +1,15 @@
+name: chronos-forge
+services:
+- name: web
+  github:
+    branch: main
+    deploy_on_push: true
+  http_port: 8080
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  routes:
+  - path: /
+  source_dir: /
+  envs:
+  - key: PORT
+    value: "8080" 
