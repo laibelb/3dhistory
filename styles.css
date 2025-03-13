@@ -1325,8 +1325,7 @@ main {
 
 @media (max-width: 768px) {
     .screenshots-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .screenshot-item {
@@ -1334,13 +1333,23 @@ main {
     }
     
     .hero-section {
-        height: auto;
+        height: 100vh;
         min-height: 500px;
-        padding: 100px 20px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .hero-background {
+        background-position: center center;
+        background-size: cover;
     }
     
     .hero-content {
         max-width: 100%;
+        padding: 0 20px;
+        text-align: center;
     }
     
     .hero-title {
@@ -1355,6 +1364,19 @@ main {
 @media (max-width: 480px) {
     .screenshots-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .hero-section {
+        height: 100vh;
+        min-height: 450px;
+    }
+    
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
     }
 }
 
