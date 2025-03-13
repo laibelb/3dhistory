@@ -114,3 +114,69 @@ The application is configured to deploy to DigitalOcean App Platform. With the l
 ## Local Development
 
 For local development, you can still keep the assets locally. The scripts will not delete any local files, only update the references in the code.
+
+## Optimizations
+
+The website has been optimized for performance, SEO, and maintainability:
+
+### CSS Optimization
+- Modular CSS structure with separate files for:
+  - Utils: variables, reset, utilities
+  - Components: header, etc.
+  - Sections: hero, features, gallery, testimonials, pricing, footer
+- Minified CSS for production (main.min.css)
+
+### JavaScript Optimization
+- Minified JavaScript for production (script.min.js)
+- Lazy loading for images and videos
+
+### SEO Improvements
+- Added structured data (JSON-LD) for better search engine visibility
+- Created sitemap.xml for better indexing
+- Added robots.txt to guide search engine crawlers
+- Optimized meta tags and descriptions
+
+### Performance Improvements
+- Lazy loading for images and videos
+- Minified CSS and JavaScript
+- Optimized asset loading
+
+## Development
+
+### Prerequisites
+- Node.js 18.x
+
+### Installation
+```bash
+npm install
+```
+
+### Development
+```bash
+npm start
+```
+
+### Build for Production
+```bash
+npm run build
+```
+
+### Asset Management
+```bash
+# Upload assets to DigitalOcean Spaces
+npm run upload-assets
+
+# Update asset references in HTML, CSS, and JS files
+npm run update-references
+
+# Clean up local assets after uploading
+npm run cleanup-assets
+```
+
+## Deployment
+
+The website is deployed on DigitalOcean App Platform. See DEPLOYMENT.md for more details.
+
+## License
+
+All rights reserved. © 2025 3D History.

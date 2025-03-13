@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Sitemap: https://threedhistory-8s36b.ondigitalocean.app/sitemap.xml
+
+# Disallow access to specific files
+Disallow: /.env
+Disallow: /.git/
+Disallow: /.do/
+Disallow: /node_modules/
+Disallow: /package-lock.json
+Disallow: /package.json
+Disallow: /Dockerfile
+Disallow: /server.js
+Disallow: /upload-to-spaces.js
+Disallow: /update-asset-references.js
+Disallow: /cleanup-local-assets.js
+Disallow: /image-downloader.js
+Disallow: /video-downloader.js 

@@ -1,0 +1,14 @@
+/* Variables */
+:root {
+    --primary-color: #5643fd;
+    --secondary-color: #1a1a2e;
+    --text-color: #e0e0e0;
+    --dark-bg: #0a0a14;
+    --accent-color: #ff3e6c;
+    --font-primary: 'Inter', sans-serif;
+    --font-display: 'Inter', sans-serif;
+    --gradient-blue: linear-gradient(135deg, #5643fd, #3a2db3);
+    --gradient-accent: linear-gradient(135deg, #ff3e6c, #c83644);
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 20px rgba(86, 67, 253, 0.4);
+} 

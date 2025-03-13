@@ -1,0 +1,19 @@
+/* Main CSS File - Imports all modular CSS files */
+
+/* Utils */
+@import 'utils/variables.css';
+@import 'utils/reset.css';
+@import 'utils/utilities.css';
+
+/* Components */
+@import 'components/header.css';
+
+/* Sections */
+@import 'sections/hero.css';
+@import 'sections/features.css';
+@import 'sections/gallery.css';
+@import 'sections/testimonials.css';
+@import 'sections/pricing.css';
+@import 'sections/footer.css';
+
+/* Add any additional global styles here */ 
