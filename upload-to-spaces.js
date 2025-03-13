@@ -77,20 +77,12 @@ async function uploadAssets() {
     // Get all files in the assets directory
     const assetFiles = await getFiles('assets');
     
-    // Filter for large files (> 1MB)
-    const largeFiles = [];
-    for (const file of assetFiles) {
-      const fileStats = await stat(file);
-      if (fileStats.size > 1024 * 1024) { // > 1MB
-        largeFiles.push(file);
-      }
-    }
+    // Upload all files, not just large ones
+    console.log(`Found ${assetFiles.length} files to upload`);
     
-    console.log(`Found ${largeFiles.length} large files to upload`);
-    
-    // Upload each large file
+    // Upload each file
     const uploadResults = [];
-    for (const file of largeFiles) {
+    for (const file of assetFiles) {
       const result = await uploadFile(file);
       if (result) {
         uploadResults.push(result);
