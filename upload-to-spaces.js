@@ -48,60 +48,91 @@ async function uploadFile(filePath) {
   else if (extension === '.gif') contentType = 'image/gif';
   else if (extension === '.mp4') contentType = 'video/mp4';
   else if (extension === '.webm') contentType = 'video/webm';
+  else if (extension === '.css') contentType = 'text/css';
+  else if (extension === '.js') contentType = 'application/javascript';
+  else if (extension === '.html') contentType = 'text/html';
   
   // Upload parameters
   const params = {
     Bucket: process.env.SPACES_BUCKET,
-    Key: relativePath,
+    Key: `assets/${relativePath}`,
     Body: fileContent,
     ACL: 'public-read',
     ContentType: contentType
   };
   
   try {
-    const data = await s3.upload(params).promise();
-    console.log(`File uploaded successfully at ${data.Location}`);
-    return {
-      originalPath: filePath,
-      spacesUrl: `${SPACES_BASE_URL}/${relativePath}`
-    };
+    // Upload the file
+    await s3.putObject(params).promise();
+    console.log(`Uploaded: ${filePath} -> ${SPACES_BASE_URL}/assets/${relativePath}`);
+    
+    // Return the URL for the asset mapping
+    return `${SPACES_BASE_URL}/assets/${relativePath}`;
   } catch (err) {
     console.error(`Error uploading ${filePath}:`, err);
     return null;
   }
 }
 
-// Main function to upload all assets
+// Function to upload all assets
 async function uploadAssets() {
   try {
-    // Get all files in the assets directory
+    // Create asset mapping object
+    const assetMapping = {};
+    
+    // Upload assets directory
+    console.log('Uploading assets directory...');
     const assetFiles = await getFiles('assets');
-    
-    // Upload all files, not just large ones
-    console.log(`Found ${assetFiles.length} files to upload`);
-    
-    // Upload each file
-    const uploadResults = [];
     for (const file of assetFiles) {
-      const result = await uploadFile(file);
-      if (result) {
-        uploadResults.push(result);
-      }
+      const spacesUrl = await uploadFile(file);
+      assetMapping[file] = spacesUrl;
     }
     
-    // Generate a mapping file for reference
-    const mapping = uploadResults.reduce((acc, item) => {
-      acc[item.originalPath] = item.spacesUrl;
-      return acc;
-    }, {});
+    // Upload CSS directory
+    console.log('Uploading CSS directory...');
+    try {
+      const cssFiles = await getFiles('css');
+      for (const file of cssFiles) {
+        const relativePath = path.relative('css', file).replace(/\\/g, '/');
+        const key = `css/${relativePath}`;
+        
+        // Read the file
+        const fileContent = fs.readFileSync(file);
+        
+        // Set content type
+        let contentType = 'text/css';
+        if (path.extname(file).toLowerCase() === '.js') {
+          contentType = 'application/javascript';
+        }
+        
+        // Upload parameters
+        const params = {
+          Bucket: process.env.SPACES_BUCKET,
+          Key: key,
+          Body: fileContent,
+          ACL: 'public-read',
+          ContentType: contentType
+        };
+        
+        // Upload the file
+        await s3.putObject(params).promise();
+        console.log(`Uploaded: ${file} -> ${SPACES_BASE_URL}/${key}`);
+        
+        // Add to asset mapping
+        assetMapping[file] = `${SPACES_BASE_URL}/${key}`;
+      }
+    } catch (err) {
+      console.log('No CSS directory or error uploading CSS files:', err.message);
+    }
     
-    fs.writeFileSync('asset-mapping.json', JSON.stringify(mapping, null, 2));
-    console.log(`Uploaded ${uploadResults.length} files successfully`);
-    console.log('Asset mapping saved to asset-mapping.json');
+    // Save the asset mapping to a file
+    fs.writeFileSync('asset-mapping.json', JSON.stringify(assetMapping, null, 2));
+    console.log(`Asset mapping saved to asset-mapping.json with ${Object.keys(assetMapping).length} entries`);
     
-    return uploadResults;
+    return assetMapping;
   } catch (err) {
     console.error('Error uploading assets:', err);
+    throw err;
   }
 }
 

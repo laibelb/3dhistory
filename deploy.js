@@ -2,7 +2,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('Starting deployment process...');
+console.log('Starting enhanced deployment process...');
 
 // Step 1: Create placeholder videos if they don't exist
 console.log('\n1. Creating placeholder videos...');
@@ -61,9 +61,27 @@ try {
 // Step 4: Update asset references in the code
 console.log('\n4. Updating asset references...');
 try {
-  execSync('npm run update-references', { stdio: 'inherit' });
+  execSync('node update-asset-references.js', { stdio: 'inherit' });
 } catch (error) {
   console.error('Error updating asset references:', error);
+  process.exit(1);
+}
+
+// Step 4.5: Fix CSS references in deployed HTML
+console.log('\n4.5. Fixing CSS references in deployed HTML...');
+try {
+  execSync('node fix-deployed-css.js', { stdio: 'inherit' });
+} catch (error) {
+  console.error('Error fixing CSS references:', error);
+  process.exit(1);
+}
+
+// Step 4.6: Ensure all assets are properly prepared for deployment
+console.log('\n4.6. Ensuring all assets are properly prepared for deployment...');
+try {
+  execSync('node ensure-deployed-assets.js', { stdio: 'inherit' });
+} catch (error) {
+  console.error('Error ensuring assets for deployment:', error);
   process.exit(1);
 }
 
@@ -81,7 +99,7 @@ try {
 console.log('\n6. Committing changes...');
 try {
   execSync('git add .', { stdio: 'inherit' });
-  execSync('git commit -m "Prepare for deployment"', { stdio: 'inherit' });
+  execSync('git commit -m "Prepare for deployment with enhanced asset handling"', { stdio: 'inherit' });
 } catch (error) {
   console.error('Error committing changes:', error);
   process.exit(1);
@@ -96,5 +114,6 @@ try {
   process.exit(1);
 }
 
-console.log('\nDeployment process completed successfully!');
-console.log('The site should now be available at https://threedhistory-8s36b.ondigitalocean.app/'); 
+console.log('\nEnhanced deployment process completed successfully!');
+console.log('The site should now be available at https://threedhistory-8s36b.ondigitalocean.app/');
+console.log('Please verify that all styles and images are displaying correctly.'); 

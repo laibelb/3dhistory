@@ -16,4 +16,75 @@
 @import 'sections/pricing.css';
 @import 'sections/footer.css';
 
-/* Add any additional global styles here */ 
+/* Add any additional global styles here */
+
+:root {
+    --primary-color: #5643fd;
+    --secondary-color: #1a1a2e;
+    --text-color: #e0e0e0;
+    --dark-bg: #0a0a14;
+    --accent-color: #ff3e6c;
+    --font-primary: 'Inter', sans-serif;
+    --font-display: 'Inter', sans-serif;
+    --gradient-blue: linear-gradient(135deg, #5643fd, #3a2db3);
+    --gradient-accent: linear-gradient(135deg, #ff3e6c, #c83644);
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 20px rgba(86, 67, 253, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background: var(--gradient-blue);
+    color: #fff;
+    box-shadow: var(--shadow-glow);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(86, 67, 253, 0.5);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background: rgba(86, 67, 253, 0.1);
+    transform: translateY(-2px);
+} 

@@ -7,6 +7,7 @@
     "start": "node server.js",
     "upload-assets": "node upload-to-spaces.js",
     "update-references": "node update-asset-references.js",
+    "fix-css": "node fix-deployed-css.js",
     "cleanup-assets": "node cleanup-local-assets.js",
     "build:css": "cleancss -o css/main.min.css css/main.css",
     "build:js": "uglifyjs script.js -o script.min.js",

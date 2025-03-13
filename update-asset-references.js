@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('Starting update-asset-references.js script...');
+console.log('Starting enhanced update-asset-references.js script...');
 
 // Load the asset mapping
 let assetMapping;
@@ -76,6 +76,50 @@ function updateFileReferences(filePath, mapping) {
       }
     });
     
+    // Special handling for CSS files to ensure they're properly referenced
+    if (filePath.endsWith('.html')) {
+      // Make sure the main.min.css file is properly referenced
+      if (!content.includes('css/main.min.css') && !content.includes('main.min.css')) {
+        console.log('  Adding missing CSS reference to main.min.css');
+        content = content.replace(
+          /<link rel="stylesheet" href="styles.css">/,
+          '<link rel="stylesheet" href="css/main.min.css">\n    <link rel="stylesheet" href="styles.css">'
+        );
+        updated = true;
+      }
+      
+      // Ensure all asset paths use absolute paths for production
+      if (filePath === 'index.html' || filePath === 'deployed-site.html') {
+        console.log('  Ensuring all asset paths use absolute paths for production');
+        
+        // Fix relative paths for assets
+        content = content.replace(/src="assets\//g, 'src="/assets/');
+        content = content.replace(/href="assets\//g, 'href="/assets/');
+        content = content.replace(/url\(assets\//g, 'url(/assets/');
+        
+        // Fix relative paths for CSS
+        content = content.replace(/href="css\//g, 'href="/css/');
+        content = content.replace(/href="styles.css"/g, 'href="/styles.css"');
+        
+        // Fix relative paths for JS
+        content = content.replace(/src="script.min.js"/g, 'src="/script.min.js"');
+        content = content.replace(/src="script.js"/g, 'src="/script.js"');
+        
+        updated = true;
+      }
+    }
+    
+    // Special handling for CSS files
+    if (filePath.endsWith('.css')) {
+      console.log('  Checking CSS file for asset references');
+      
+      // Fix relative paths in CSS
+      content = content.replace(/url\(["']?assets\//g, 'url("/assets/');
+      content = content.replace(/url\(["']?\.\.\/assets\//g, 'url("/assets/');
+      
+      updated = true;
+    }
+    
     // Write the file back if changes were made
     if (content !== originalContent) {
       fs.writeFileSync(filePath, content);
@@ -99,6 +143,7 @@ function escapeRegExp(string) {
 // Files to update
 const filesToUpdate = [
   'index.html',
+  'deployed-site.html',
   'script.js',
   'styles.css'
 ];
@@ -106,8 +151,12 @@ const filesToUpdate = [
 // Update each file
 let updatedCount = 0;
 filesToUpdate.forEach(file => {
-  const updated = updateFileReferences(file, assetMapping);
-  if (updated) updatedCount++;
+  if (fs.existsSync(file)) {
+    const updated = updateFileReferences(file, assetMapping);
+    if (updated) updatedCount++;
+  } else {
+    console.log(`File ${file} does not exist, skipping.`);
+  }
 });
 
 console.log(`Updated references in ${updatedCount} files`);
@@ -134,4 +183,21 @@ if (!dockerignore.includes('# Large assets (now on CDN)')) {
   console.log('Updated .dockerignore');
 }
 
-console.log('Asset reference update complete!'); 
+// Create a copy of the updated files in the deployed-site directory
+console.log('Creating copies of updated files in deployed-site directory...');
+
+// Ensure deployed-site directory exists
+if (!fs.existsSync('deployed-site')) {
+  fs.mkdirSync('deployed-site', { recursive: true });
+  console.log('Created deployed-site directory');
+}
+
+// Copy updated files to deployed-site directory
+filesToUpdate.forEach(file => {
+  if (fs.existsSync(file)) {
+    fs.copyFileSync(file, path.join('deployed-site', file));
+    console.log(`Copied ${file} to deployed-site directory`);
+  }
+});
+
+console.log('Enhanced asset reference update complete!'); 
