@@ -168,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let sliderIndex = 0;
         const slides = document.querySelectorAll('.slider-slide');
         let isTransitioning = false;
+        let sliderInterval;
         
         const showSlide = (index) => {
             if (isTransitioning) return;
@@ -184,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Then animate the slide with a slight delay
             setTimeout(() => {
                 sliderTrack.style.transition = 'transform 0.5s ease-in-out';
-                sliderTrack.style.transform = `translateX(-${index * 100}%)`;
+                sliderTrack.style.transform = `translateX(-${index * 25}%)`;
                 
                 sliderIndex = index;
                 
@@ -195,19 +196,38 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 50);
         };
         
+        // Function to advance to the next slide
+        const nextSlide = () => {
+            const newIndex = (sliderIndex + 1) % slides.length;
+            showSlide(newIndex);
+        };
+        
+        // Set up automatic rotation
+        const startAutoRotation = () => {
+            clearInterval(sliderInterval);
+            sliderInterval = setInterval(nextSlide, 6000);
+        };
+        
+        // Initialize auto rotation
+        startAutoRotation();
+        
+        // Add event listeners to dots
         sliderDots.forEach((dot, index) => {
             dot.addEventListener('click', () => {
                 if (!isTransitioning) {
                     showSlide(index);
+                    startAutoRotation(); // Reset timer when manually changing slides
                 }
             });
         });
         
+        // Add event listeners to prev/next buttons
         if (sliderPrev) {
             sliderPrev.addEventListener('click', () => {
                 if (!isTransitioning) {
                     const newIndex = (sliderIndex - 1 + slides.length) % slides.length;
                     showSlide(newIndex);
+                    startAutoRotation(); // Reset timer when manually changing slides
                 }
             });
         }
@@ -215,9 +235,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (sliderNext) {
             sliderNext.addEventListener('click', () => {
                 if (!isTransitioning) {
-                    const newIndex = (sliderIndex + 1) % slides.length;
-                    showSlide(newIndex);
+                    nextSlide();
+                    startAutoRotation(); // Reset timer when manually changing slides
                 }
+            });
+        }
+        
+        // Pause auto rotation when hovering over the slider
+        const sliderContainer = document.querySelector('.slider-container');
+        if (sliderContainer) {
+            sliderContainer.addEventListener('mouseenter', () => {
+                clearInterval(sliderInterval);
+            });
+            
+            sliderContainer.addEventListener('mouseleave', () => {
+                startAutoRotation();
             });
         }
         
