@@ -158,4 +158,46 @@ async function downloadAllImages() {
 }
 
 // Start the download process
-downloadAllImages(); 
+downloadAllImages();
+
+// Add testimonial images
+const testimonialImages = [
+    {
+        url: 'https://randomuser.me/api/portraits/women/65.jpg',
+        path: 'assets/images/testimonials/principal.jpg',
+        description: 'School Principal'
+    },
+    {
+        url: 'https://randomuser.me/api/portraits/men/32.jpg',
+        path: 'assets/images/testimonials/teacher.jpg',
+        description: 'History Teacher'
+    },
+    {
+        url: 'https://randomuser.me/api/portraits/women/42.jpg',
+        path: 'assets/images/testimonials/tech-director.jpg',
+        description: 'Technology Director'
+    }
+];
+
+// Download testimonial images
+async function downloadTestimonialImages() {
+    console.log('Downloading testimonial images...');
+    
+    for (const image of testimonialImages) {
+        try {
+            const response = await fetch(image.url);
+            if (!response.ok) {
+                throw new Error(`Failed to download ${image.url}: ${response.statusText}`);
+            }
+            
+            const buffer = await response.arrayBuffer();
+            await fs.promises.writeFile(image.path, Buffer.from(buffer));
+            console.log(`Downloaded ${image.description} image to ${image.path}`);
+        } catch (error) {
+            console.error(`Error downloading ${image.url}:`, error);
+        }
+    }
+}
+
+// Call the function to download testimonial images
+downloadTestimonialImages(); 
