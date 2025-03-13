@@ -1179,7 +1179,7 @@ main {
 .education-image {
     flex: 1;
     min-height: 400px;
-    background-image: url('assets/generated/artfellow_A_character_selection_screen_for_a_historical_RPG_fea_57084153-bbcd-459a-8e4a-2a3ba78b0099.png');
+    background-image: url('https://3dhistory.nyc3.digitaloceanspaces.com/generated/artfellow_A_character_selection_screen_for_a_historical_RPG_fea_57084153-bbcd-459a-8e4a-2a3ba78b0099.png');
     background-size: cover;
     background-position: center;
     border-radius: 8px;

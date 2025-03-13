@@ -24,3 +24,7 @@ Thumbs.db
 # Logs
 logs
 *.log 
+# Large assets (now on CDN)
+assets/generated/
+assets/videos/
+assets/images/
