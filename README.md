@@ -2,6 +2,10 @@
 
 This is the landing page for Chronos Forge, a platform for AI-developed 3D interactive games featuring rich historical narratives and dynamic gameplay powered by Unreal Engine 5.
 
+## GitHub Repository
+
+This project is now hosted on GitHub at: https://github.com/laibelb/3dhistory
+
 ## Features
 
 - Responsive design with modern aesthetics
@@ -109,4 +113,4 @@ The application is configured to deploy to DigitalOcean App Platform. With the l
 
 ## Local Development
 
-For local development, you can still keep the assets locally. The scripts will not delete any local files, only update the references in the code. 
+For local development, you can still keep the assets locally. The scripts will not delete any local files, only update the references in the code.
